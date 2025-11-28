@@ -9,11 +9,13 @@ import SwiftUI
 
 @main
 struct QPApp: App {
+    @StateObject private var appState = AppState()
     let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environmentObject(appState)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
