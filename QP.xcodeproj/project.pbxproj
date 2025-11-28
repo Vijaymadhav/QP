@@ -16,6 +16,16 @@
 		B10B33302ED933600000B0F6 /* QPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10B332F2ED933600000B0F6 /* QPTests.swift */; };
 		B10B333A2ED933600000B0F6 /* QPUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10B33392ED933600000B0F6 /* QPUITests.swift */; };
 		B10B333C2ED933600000B0F6 /* QPUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10B333B2ED933600000B0F6 /* QPUITestsLaunchTests.swift */; };
+		B1A102A12F0A000100000001 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A12F0A000100000001 /* AppState.swift */; };
+		B1A102A22F0A000100000001 /* TMDBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A22F0A000100000001 /* TMDBClient.swift */; };
+		B1A102A32F0A000100000001 /* MovieVectorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A32F0A000100000001 /* MovieVectorStore.swift */; };
+		B1A102A42F0A000100000001 /* ImageCaching.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A42F0A000100000001 /* ImageCaching.swift */; };
+		B1A102A52F0A000100000001 /* Array+Unique.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A52F0A000100000001 /* Array+Unique.swift */; };
+		B1A102A62F0A000100000001 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A62F0A000100000001 /* RootView.swift */; };
+		B1A102A72F0A000100000001 /* OnboardingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A72F0A000100000001 /* OnboardingFlowView.swift */; };
+		B1A102A82F0A000100000001 /* SwipeDeckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A82F0A000100000001 /* SwipeDeckView.swift */; };
+		B1A102A92F0A000100000001 /* MoviesLikeXView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A92F0A000100000001 /* MoviesLikeXView.swift */; };
+		B1A102AA2F0A000100000001 /* WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AA2F0A000100000001 /* WatchlistView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +58,16 @@
 		B10B33352ED933600000B0F6 /* QPUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QPUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10B33392ED933600000B0F6 /* QPUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPUITests.swift; sourceTree = "<group>"; };
 		B10B333B2ED933600000B0F6 /* QPUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B1A100A12F0A000100000001 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		B1A100A22F0A000100000001 /* TMDBClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBClient.swift; sourceTree = "<group>"; };
+		B1A100A32F0A000100000001 /* MovieVectorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieVectorStore.swift; sourceTree = "<group>"; };
+		B1A100A42F0A000100000001 /* ImageCaching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaching.swift; sourceTree = "<group>"; };
+		B1A100A52F0A000100000001 /* Array+Unique.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Unique.swift"; sourceTree = "<group>"; };
+		B1A100A62F0A000100000001 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		B1A100A72F0A000100000001 /* OnboardingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowView.swift; sourceTree = "<group>"; };
+		B1A100A82F0A000100000001 /* SwipeDeckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDeckView.swift; sourceTree = "<group>"; };
+		B1A100A92F0A000100000001 /* MoviesLikeXView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesLikeXView.swift; sourceTree = "<group>"; };
+		B1A100AA2F0A000100000001 /* WatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +118,9 @@
 		B10B33182ED9335E0000B0F6 /* QP */ = {
 			isa = PBXGroup;
 			children = (
+				B1A101012F0A000100000001 /* App */,
+				B1A101032F0A000100000001 /* Features */,
+				B1A101022F0A000100000001 /* Shared */,
 				B10B33192ED9335E0000B0F6 /* QPApp.swift */,
 				B10B331B2ED9335E0000B0F6 /* ContentView.swift */,
 				B10B331D2ED9335F0000B0F6 /* Assets.xcassets */,
@@ -131,6 +154,77 @@
 				B10B333B2ED933600000B0F6 /* QPUITestsLaunchTests.swift */,
 			);
 			path = QPUITests;
+			sourceTree = "<group>";
+		};
+		B1A101032F0A000100000001 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				B1A101042F0A000100000001 /* Root */,
+				B1A101052F0A000100000001 /* Onboarding */,
+				B1A101062F0A000100000001 /* Discover */,
+				B1A101072F0A000100000001 /* MoviesLikeX */,
+				B1A101082F0A000100000001 /* Watchlist */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		B1A101012F0A000100000001 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B1A100A12F0A000100000001 /* AppState.swift */,
+				B1A100A22F0A000100000001 /* TMDBClient.swift */,
+				B1A100A32F0A000100000001 /* MovieVectorStore.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		B1A101022F0A000100000001 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B1A100A42F0A000100000001 /* ImageCaching.swift */,
+				B1A100A52F0A000100000001 /* Array+Unique.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		B1A101042F0A000100000001 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				B1A100A62F0A000100000001 /* RootView.swift */,
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		B1A101052F0A000100000001 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				B1A100A72F0A000100000001 /* OnboardingFlowView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		B1A101062F0A000100000001 /* Discover */ = {
+			isa = PBXGroup;
+			children = (
+				B1A100A82F0A000100000001 /* SwipeDeckView.swift */,
+			);
+			path = Discover;
+			sourceTree = "<group>";
+		};
+		B1A101072F0A000100000001 /* MoviesLikeX */ = {
+			isa = PBXGroup;
+			children = (
+				B1A100A92F0A000100000001 /* MoviesLikeXView.swift */,
+			);
+			path = MoviesLikeX;
+			sourceTree = "<group>";
+		};
+		B1A101082F0A000100000001 /* Watchlist */ = {
+			isa = PBXGroup;
+			children = (
+				B1A100AA2F0A000100000001 /* WatchlistView.swift */,
+			);
+			path = Watchlist;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,6 +361,16 @@
 				B10B33232ED9335F0000B0F6 /* Persistence.swift in Sources */,
 				B10B331C2ED9335E0000B0F6 /* ContentView.swift in Sources */,
 				B10B331A2ED9335E0000B0F6 /* QPApp.swift in Sources */,
+				B1A102A12F0A000100000001 /* AppState.swift in Sources */,
+				B1A102A22F0A000100000001 /* TMDBClient.swift in Sources */,
+				B1A102A32F0A000100000001 /* MovieVectorStore.swift in Sources */,
+				B1A102A42F0A000100000001 /* ImageCaching.swift in Sources */,
+				B1A102A52F0A000100000001 /* Array+Unique.swift in Sources */,
+				B1A102A62F0A000100000001 /* RootView.swift in Sources */,
+				B1A102A72F0A000100000001 /* OnboardingFlowView.swift in Sources */,
+				B1A102A82F0A000100000001 /* SwipeDeckView.swift in Sources */,
+				B1A102A92F0A000100000001 /* MoviesLikeXView.swift in Sources */,
+				B1A102AA2F0A000100000001 /* WatchlistView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
