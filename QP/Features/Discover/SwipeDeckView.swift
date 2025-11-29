@@ -10,13 +10,21 @@ struct SwipeDeckView: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            QPBackgroundView()
+            LogoBadgeBackground()
+                .opacity(0.15)
+                .scaleEffect(1.2)
+                .offset(x: -40, y: 120)
             
             if movies.isEmpty {
-                Text("You're all caught up!\nWe'll find more for you soon.")
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.white)
-                    .padding()
+                VStack(spacing: 16) {
+                    LogoBadge(size: 120)
+                        .opacity(0.2)
+                    Text("You're all caught up!\nWe'll find more for you soon.")
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(QPTheme.textPrimary)
+                        .padding()
+                }
             } else {
                 VStack {
                     ZStack {
@@ -100,8 +108,8 @@ struct SwipeCardView: View {
             }
         
         ZStack(alignment: .bottomLeading) {
-            RoundedRectangle(cornerRadius: 24)
-                .fill(Color.white.opacity(0.04))
+            RoundedRectangle(cornerRadius: 32)
+                .fill(LinearGradient(colors: [Color(red: 0.1, green: 0.1, blue: 0.13), Color.black], startPoint: .topLeading, endPoint: .bottomTrailing))
                 .overlay(
                     VStack(alignment: .leading, spacing: 12) {
                         if let url = movie.fullPosterURL {
@@ -112,45 +120,51 @@ struct SwipeCardView: View {
                                         .resizable()
                                         .scaledToFill()
                                 case .failure:
-                                    Color.gray.opacity(0.35)
-                                        .overlay(Image(systemName: "icloud.slash").foregroundColor(.white.opacity(0.8)))
+                                    LogoBadge(size: 80)
+                                        .foregroundColor(QPTheme.accent)
+                                        .frame(maxWidth: .infinity)
                                 case .empty:
-                                    Color.gray.opacity(0.25)
-                                        .overlay(ProgressView().tint(.white))
+                                    Color.white.opacity(0.05)
+                                        .overlay(ProgressView().tint(QPTheme.accent))
                                 }
                             }
                             .frame(height: 360)
                             .clipped()
                             .cornerRadius(20)
                         } else {
-                            Color.gray.opacity(0.3)
+                            LogoBadge(size: 120)
                                 .frame(height: 360)
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(QPTheme.accent.opacity(0.7))
+                                .background(Color.white.opacity(0.02))
                                 .cornerRadius(20)
                         }
                         
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text(movie.title)
                                 .font(.title.bold())
+                                .foregroundColor(QPTheme.textPrimary)
                             
                             Text("Mind-bending • Sci-Fi • \(movie.displayRuntime)")
                                 .font(.subheadline)
-                                .foregroundColor(.gray)
+                                .foregroundColor(QPTheme.textMuted)
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Why this movie?")
                                     .font(.headline)
-                                
+                                    .foregroundColor(QPTheme.textPrimary)
                                 Text("• Matches your current mood")
                                 Text("• People your age & background loved similar films")
                             }
                             .font(.footnote)
+                            .foregroundColor(QPTheme.textMuted)
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 24)
                     }
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 24))
-                .shadow(radius: 10)
+                .shadow(color: QPTheme.accent.opacity(0.3), radius: 25, y: 12)
         }
         .padding(.vertical, 24)
         .offset(offset)
@@ -191,11 +205,11 @@ struct CircleButton: View {
         Button(action: action) {
             Image(systemName: systemName)
                 .font(.system(size: 24, weight: .bold))
-                .frame(width: 64, height: 64)
-                .background(Color.white)
-                .foregroundColor(.black)
+                .frame(width: 68, height: 68)
+                .background(QPTheme.accent)
+                .foregroundColor(.white)
                 .clipShape(Circle())
-                .shadow(radius: 6)
+                .shadow(color: QPTheme.accent.opacity(0.5), radius: 18, y: 8)
         }
     }
 }

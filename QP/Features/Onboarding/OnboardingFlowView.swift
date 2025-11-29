@@ -7,10 +7,11 @@ enum OnboardingStep {
 struct OnboardingFlowView: View {
     @EnvironmentObject var appState: AppState
     @State private var step: OnboardingStep = .location
+    @State private var lastLoggedStep: OnboardingStep = .location
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 32) {
                 switch step {
                 case .location:
                     LocationStep(step: $step)
@@ -22,10 +23,36 @@ struct OnboardingFlowView: View {
                     FavoritesStep()
                 }
             }
-            .padding()
-            .background(Color.black.ignoresSafeArea())
+            .padding(.vertical, 32)
+            .padding(.bottom, 40)
+            .background(
+                ZStack(alignment: .bottomTrailing) {
+                    Color.clear
+                    LogoBadgeBackground()
+                        .opacity(0.18)
+                        .offset(x: 50, y: 80)
+                }
+            )
             .navigationTitle("Qouch Potato")
-            .foregroundColor(.white)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .foregroundColor(QPTheme.textPrimary)
+            .onAppear { logStepIfNeeded(step) }
+            .onChange(of: step, perform: logStepIfNeeded)
+            .onDisappear {
+                if !appState.isOnboarded {
+                    Analytics.shared.log(.onboardingAbandoned(step: lastLoggedStep.analyticsLabel))
+                }
+            }
+        }
+        .background(QPBackgroundView())
+    }
+    
+    private func logStepIfNeeded(_ step: OnboardingStep) {
+        if lastLoggedStep != step {
+            lastLoggedStep = step
+            Analytics.shared.log(.onboardingStepStarted(step: step.analyticsLabel))
+        } else if lastLoggedStep == .location {
+            Analytics.shared.log(.onboardingStepStarted(step: step.analyticsLabel))
         }
     }
 }
@@ -35,39 +62,49 @@ struct LocationStep: View {
     @Binding var step: OnboardingStep
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            Text("Where did you grow up?")
-                .font(.title.bold())
-            
-            TextField("City, Country", text: $appState.userProfile.location)
-                .textFieldStyle(.roundedBorder)
-                .foregroundColor(.black)
-            
-            HStack {
-                ForEach(["Mumbai, India", "Los Angeles, USA", "Delhi, India"], id: \.self) { place in
-                    Button(place) {
-                        appState.userProfile.location = place
+        OnboardingCard {
+            VStack(alignment: .leading, spacing: 24) {
+                Text("Where did you grow up?")
+                    .font(.title.bold())
+                    .foregroundColor(QPTheme.textPrimary)
+                
+                TextField("City, Country", text: $appState.userProfile.location)
+                    .textInputAutocapitalization(.words)
+                    .disableAutocorrection(true)
+                    .padding(12)
+                    .background(Color.white.opacity(0.08))
+                    .cornerRadius(14)
+                    .foregroundColor(QPTheme.textPrimary)
+                
+                HStack {
+                    ForEach(["Mumbai, India", "Los Angeles, USA", "Delhi, India"], id: \.self) { place in
+                        Button(place) {
+                            appState.userProfile.location = place
+                        }
+                        .font(.caption)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .background(QPTheme.accent.opacity(0.18))
+                        .overlay(
+                            Capsule().stroke(QPTheme.accent, lineWidth: 1)
+                        )
+                        .foregroundColor(QPTheme.textPrimary)
                     }
-                    .font(.caption)
-                    .padding(8)
-                    .background(Color.white.opacity(0.1))
-                    .clipShape(Capsule())
                 }
+                
+                Button {
+                    step = .gender
+                } label: {
+                    Text("Next")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(appState.userProfile.location.isEmpty ? QPTheme.accent.opacity(0.35) : QPTheme.accent)
+                        .foregroundColor(.white)
+                        .cornerRadius(16)
+                }
+                .disabled(appState.userProfile.location.isEmpty)
             }
-            
-            Spacer()
-            
-            Button {
-                step = .gender
-            } label: {
-                Text("Next")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(appState.userProfile.location.isEmpty ? .gray : .white)
-                    .foregroundColor(.black)
-                    .cornerRadius(12)
-            }
-            .disabled(appState.userProfile.location.isEmpty)
         }
     }
 }
@@ -77,47 +114,47 @@ struct GenderStep: View {
     @Binding var step: OnboardingStep
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            Text("What is your gender?")
-                .font(.title.bold())
-            
-            let columns = [GridItem(.flexible()), GridItem(.flexible())]
-            LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(Gender.allCases) { gender in
-                    Button {
-                        appState.userProfile.gender = gender
-                    } label: {
-                        Text(gender.rawValue)
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .background(
-                                appState.userProfile.gender == gender
-                                ? Color.white
-                                : Color.white.opacity(0.15)
-                            )
-                            .foregroundColor(appState.userProfile.gender == gender ? .black : .white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.white.opacity(0.4), lineWidth: appState.userProfile.gender == gender ? 0 : 1)
-                            )
+        OnboardingCard {
+            VStack(alignment: .leading, spacing: 24) {
+                Text("What is your gender?")
+                    .font(.title.bold())
+                    .foregroundColor(QPTheme.textPrimary)
+                
+                let columns = [GridItem(.flexible()), GridItem(.flexible())]
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(Gender.allCases) { gender in
+                        Button {
+                            appState.userProfile.gender = gender
+                        } label: {
+                            Text(gender.rawValue)
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(
+                                    appState.userProfile.gender == gender ? QPTheme.accent : Color.white.opacity(0.08)
+                                )
+                                .foregroundColor(appState.userProfile.gender == gender ? .white : QPTheme.textPrimary)
+                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                        .stroke(QPTheme.accent.opacity(appState.userProfile.gender == gender ? 1 : 0.4), lineWidth: 1.5)
+                                )
+                        }
+                        .animation(.easeInOut(duration: 0.12), value: appState.userProfile.gender)
                     }
-                    .animation(.easeInOut(duration: 0.12), value: appState.userProfile.gender)
                 }
-            }
-            
-            Spacer()
-            
-            Button {
-                step = .age
-            } label: {
-                Text("Next")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.white)
-                    .foregroundColor(.black)
-                    .cornerRadius(12)
+                
+                Button {
+                    step = .age
+                } label: {
+                    Text("Next")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(QPTheme.accent)
+                        .foregroundColor(.white)
+                        .cornerRadius(16)
+                }
             }
         }
     }
@@ -128,26 +165,30 @@ struct AgeStep: View {
     @Binding var step: OnboardingStep
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            Text("How old are you?")
-                .font(.title.bold())
-            
-            Text("\(Int(appState.userProfile.age)) years")
-                .font(.headline)
-            
-            Slider(value: $appState.userProfile.age, in: 13...70, step: 1)
-            
-            Spacer()
-            
-            Button {
-                step = .favorites
-            } label: {
-                Text("Next")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.white)
-                    .foregroundColor(.black)
-                    .cornerRadius(12)
+        OnboardingCard {
+            VStack(alignment: .leading, spacing: 24) {
+                Text("How old are you?")
+                    .font(.title.bold())
+                    .foregroundColor(QPTheme.textPrimary)
+                
+                Text("\(Int(appState.userProfile.age)) years")
+                    .font(.title3.weight(.semibold))
+                    .foregroundColor(QPTheme.accent)
+                
+                Slider(value: $appState.userProfile.age, in: 13...70, step: 1)
+                    .tint(QPTheme.accent)
+                
+                Button {
+                    step = .favorites
+                } label: {
+                    Text("Next")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(QPTheme.accent)
+                        .foregroundColor(.white)
+                        .cornerRadius(16)
+                }
             }
         }
     }
@@ -170,156 +211,111 @@ struct FavoritesStep: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Pick 5–10 movies you love")
-                .font(.title.bold())
-            
-            HStack {
-                TextField("Search any movie…", text: $query)
-                    .textFieldStyle(.roundedBorder)
-                    .foregroundColor(.black)
-                    .onSubmit { Task { await search(for: query) } }
-                    .onChange(of: query) { newValue in
-                        scheduleAutocomplete(for: newValue)
-                    }
+        OnboardingCard {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Pick 5–10 movies you love")
+                    .font(.title.bold())
+                    .foregroundColor(QPTheme.textPrimary)
                 
-                if isLoading {
-                    ProgressView()
-                } else {
-                    Button("Go") {
-                        Task { await search(for: query) }
+                HStack {
+                    TextField("Search any movie…", text: $query)
+                        .textInputAutocapitalization(.words)
+                        .padding(12)
+                        .background(Color.white.opacity(0.08))
+                        .cornerRadius(12)
+                        .foregroundColor(QPTheme.textPrimary)
+                        .onSubmit { Task { await search(for: query) } }
+                        .onChange(of: query) { newValue in
+                            scheduleAutocomplete(for: newValue)
+                        }
+                    
+                    if isLoading {
+                        ProgressView()
+                            .tint(QPTheme.accent)
+                    } else {
+                        Button("Go") {
+                            Task { await search(for: query) }
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(QPTheme.accent)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                     }
                 }
-            }
-            
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    if !recommendedMovies.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Top picks for you")
-                                .font(.headline)
-                            
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 12) {
-                                    ForEach(recommendedMovies) { movie in
-                                        Button {
-                                            toggleFavorite(movie)
-                                        } label: {
-                                            VStack(alignment: .leading, spacing: 4) {
-                                                Text(movie.title)
-                                                    .font(.subheadline.bold())
-                                                    .multilineTextAlignment(.leading)
-                                                Text(movie.displayRuntime.isEmpty ? movie.overview : movie.displayRuntime)
-                                                    .font(.caption)
-                                                    .lineLimit(2)
-                                                    .foregroundColor(.white.opacity(0.7))
-                                            }
-                                            .padding(12)
-                                            .frame(width: 180, alignment: .leading)
-                                            .background(
-                                                appState.userProfile.favoriteMovies.contains(movie)
-                                                ? Color.white
-                                                : Color.white.opacity(0.08)
-                                            )
-                                            .foregroundColor(appState.userProfile.favoriteMovies.contains(movie) ? .black : .white)
-                                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 16)
-                                                    .stroke(Color.white.opacity(0.15), lineWidth: 1)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    if !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text("Matches")
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        if !recommendedMovies.isEmpty {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("Top picks for you")
                                     .font(.headline)
-                                if isLoading {
-                                    ProgressView()
-                                }
-                            }
-                            
-                            if results.isEmpty && !isLoading {
-                                Text("No matches yet. Keep typing to search TMDB.")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                            } else {
-                                ForEach(results.prefix(6)) { movie in
-                                    Button {
-                                        toggleFavorite(movie)
-                                    } label: {
-                                        HStack {
-                                            VStack(alignment: .leading, spacing: 4) {
-                                                Text(movie.title)
-                                                    .font(.subheadline.bold())
-                                                Text(movie.overview)
-                                                    .font(.caption2)
-                                                    .foregroundColor(.white.opacity(0.7))
-                                                    .lineLimit(2)
-                                            }
-                                            Spacer()
-                                            if appState.userProfile.favoriteMovies.contains(movie) {
-                                                Image(systemName: "checkmark.circle.fill")
-                                                    .foregroundColor(.green)
+                                    .foregroundColor(QPTheme.textPrimary)
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 12) {
+                                        ForEach(recommendedMovies) { movie in
+                                            RecommendationChip(movie: movie, isSelected: appState.userProfile.favoriteMovies.contains(movie)) {
+                                                toggleFavorite(movie)
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        .padding()
-                        .background(Color.white.opacity(0.05))
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                    }
-                    
-                    LazyVStack(alignment: .leading, spacing: 12) {
-                        ForEach(Array(results.dropFirst(min(results.count, 6)))) { movie in
-                            Button {
-                                toggleFavorite(movie)
-                            } label: {
+                        
+                        if !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            VStack(alignment: .leading, spacing: 12) {
                                 HStack {
-                                    Text(movie.title)
-                                        .foregroundColor(.white)
-                                    Spacer()
-                                    if appState.userProfile.favoriteMovies.contains(movie) {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .foregroundColor(.green)
+                                    Text("Matches")
+                                        .font(.headline)
+                                        .foregroundColor(QPTheme.textPrimary)
+                                    if isLoading { ProgressView().tint(QPTheme.accent) }
+                                }
+                                if results.isEmpty && !isLoading {
+                                    Text("No matches yet. Keep typing to search TMDB.")
+                                        .font(.caption)
+                                        .foregroundColor(QPTheme.textMuted)
+                                } else {
+                                    ForEach(results.prefix(6)) { movie in
+                                        ResultRow(movie: movie, isSelected: appState.userProfile.favoriteMovies.contains(movie)) {
+                                            toggleFavorite(movie)
+                                        }
                                     }
                                 }
                             }
                         }
+                        
+                        ForEach(results.dropFirst(min(results.count, 6))) { movie in
+                            ResultRow(movie: movie, isSelected: appState.userProfile.favoriteMovies.contains(movie)) {
+                                toggleFavorite(movie)
+                            }
+                        }
                     }
                 }
+                .frame(maxHeight: 380)
+                
+                Text("Selected: \(appState.userProfile.favoriteMovies.count)")
+                    .font(.subheadline)
+                    .foregroundColor(QPTheme.textMuted)
+                
+                Button {
+                    Analytics.shared.log(.onboardingCompleted)
+                    appState.completeOnboarding()
+                } label: {
+                    Text("Finish")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(appState.userProfile.favoriteMovies.count < 3 ? QPTheme.accent.opacity(0.35) : QPTheme.accent)
+                        .foregroundColor(.white)
+                        .cornerRadius(16)
+                }
+                .disabled(appState.userProfile.favoriteMovies.count < 3)
             }
-            
-            Text("Selected: \(appState.userProfile.favoriteMovies.count)")
-                .font(.subheadline)
-                .foregroundColor(.gray)
-            
-            Spacer()
-            
-            Button {
-                appState.completeOnboarding()
-            } label: {
-                Text("Finish")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(appState.userProfile.favoriteMovies.count < 3 ? .gray : .white)
-                    .foregroundColor(.black)
-                    .cornerRadius(12)
+            .onDisappear { searchTask?.cancel() }
+            .task(id: recommendationAnchor) {
+                await refreshRecommendations()
             }
-            .disabled(appState.userProfile.favoriteMovies.count < 3)
-        }
-        .padding()
-        .background(Color.black.ignoresSafeArea())
-        .onDisappear { searchTask?.cancel() }
-        .task(id: recommendationAnchor) {
-            await refreshRecommendations()
         }
     }
     
@@ -369,12 +365,115 @@ struct FavoritesStep: View {
                 let remote = try await TMDBClient.shared.searchMovies(query: trimmed)
                 combined = (combined + remote).uniqued()
             } catch {
-                print("Search error: \(error)")
+                let message = error.localizedDescription
+                AppLogger.network.error("Onboarding search error: \(message, privacy: .public)")
+                Analytics.shared.log(.searchError(query: trimmed, message: message))
             }
         }
         await MainActor.run {
             self.results = Array(combined.uniqued().prefix(12))
             self.isLoading = false
+        }
+    }
+}
+
+private struct RecommendationChip: View {
+    let movie: Movie
+    let isSelected: Bool
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(movie.title)
+                    .font(.subheadline.bold())
+                    .foregroundColor(.white)
+                    .lineLimit(2)
+                Text(movie.overview)
+                    .font(.caption2)
+                    .foregroundColor(QPTheme.textMuted)
+                    .lineLimit(2)
+            }
+            .padding(12)
+            .frame(width: 200, alignment: .leading)
+            .background(isSelected ? QPTheme.accent : Color.white.opacity(0.08))
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(isSelected ? Color.white.opacity(0.9) : QPTheme.accent.opacity(0.4), lineWidth: 1)
+            )
+        }
+    }
+}
+
+private struct ResultRow: View {
+    let movie: Movie
+    let isSelected: Bool
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(movie.title)
+                        .font(.subheadline.bold())
+                        .foregroundColor(QPTheme.textPrimary)
+                    Text(movie.overview)
+                        .font(.caption2)
+                        .foregroundColor(QPTheme.textMuted)
+                        .lineLimit(2)
+                }
+                Spacer()
+                if isSelected {
+                    Image(systemName: "checkmark.seal.fill")
+                        .foregroundColor(.green)
+                }
+            }
+            .padding(.vertical, 6)
+        }
+    }
+}
+
+struct OnboardingCard<Content: View>: View {
+    private let content: Content
+    
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+    
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [Color(red: 0.15, green: 0.15, blue: 0.18), Color.black],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 28, style: .continuous)
+                        .stroke(QPTheme.accent.opacity(0.4), lineWidth: 1.2)
+                )
+                .shadow(color: QPTheme.accent.opacity(0.25), radius: 25, y: 15)
+            content
+                .padding(24)
+                .foregroundColor(QPTheme.textPrimary)
+            LogoBadge(size: 54)
+                .opacity(0.5)
+                .padding(20)
+        }
+        .padding(.horizontal)
+    }
+}
+
+extension OnboardingStep {
+    var analyticsLabel: String {
+        switch self {
+        case .location: return "location"
+        case .gender: return "gender"
+        case .age: return "age"
+        case .favorites: return "favorites"
         }
     }
 }

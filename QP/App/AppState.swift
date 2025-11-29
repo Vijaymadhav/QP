@@ -34,6 +34,18 @@ final class AppState: ObservableObject {
         isOnboarded = true
     }
     
+    func logout() {
+        guard authSession != nil else { return }
+        AuthStore.shared.logout()
+        isRestoringState = true
+        authSession = nil
+        userProfile = UserProfile()
+        watchlist = []
+        likedMovies = []
+        isOnboarded = false
+        isRestoringState = false
+    }
+    
     private func restoreUserState() {
         guard let session = authSession,
               let stored = UserProfileStore.shared.load(for: session.id) else {

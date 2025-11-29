@@ -14,6 +14,7 @@ struct QPApp: App {
 
     init() {
         configureURLCache()
+        PosterPrefetcher.shared.startIfNeeded()
     }
 
     var body: some Scene {
@@ -21,6 +22,8 @@ struct QPApp: App {
             RootView()
                 .environmentObject(appState)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .tint(QPTheme.accent)
+                .preferredColorScheme(.dark)
         }
     }
     

@@ -29,6 +29,11 @@
 		B1A102AB2F0A000100000001 /* AuthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AB2F0A000100000001 /* AuthStore.swift */; };
 		B1A102AC2F0A000100000001 /* UserProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AC2F0A000100000001 /* UserProfileStore.swift */; };
 		B1A102AD2F0A000100000001 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AD2F0A000100000001 /* LoginView.swift */; };
+		B1A102B02F0A000100000001 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100B02F0A000100000001 /* AnalyticsService.swift */; };
+		B1A102B12F0A000100000001 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100B12F0A000100000001 /* AppLogger.swift */; };
+		B1A102D02F0A000100000001 /* QPTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100D02F0A000100000001 /* QPTheme.swift */; };
+		B1A102D12F0A000100000001 /* LogoBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100D12F0A000100000001 /* LogoBadge.swift */; };
+		B1A102D22F0A000100000001 /* PosterPrefetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100D22F0A000100000001 /* PosterPrefetcher.swift */; };
 		B1A102AE2F0A000100000001 /* PosterDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AE2F0A000100000001 /* PosterDiskCache.swift */; };
 		B1A102AF2F0A000100000001 /* PosterThumbnails.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AF2F0A000100000001 /* PosterThumbnails.swift */; };
 /* End PBXBuildFile section */
@@ -60,6 +65,7 @@
 		B10B33252ED9335F0000B0F6 /* QP.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QP.xcdatamodel; sourceTree = "<group>"; };
 		B10B332B2ED9335F0000B0F6 /* QPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10B332F2ED933600000B0F6 /* QPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPTests.swift; sourceTree = "<group>"; };
+		B1A100C02F0A000100000001 /* SnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotTests.swift; sourceTree = "<group>"; };
 		B10B33352ED933600000B0F6 /* QPUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QPUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10B33392ED933600000B0F6 /* QPUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPUITests.swift; sourceTree = "<group>"; };
 		B10B333B2ED933600000B0F6 /* QPUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -76,6 +82,11 @@
 		B1A100AB2F0A000100000001 /* AuthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStore.swift; sourceTree = "<group>"; };
 		B1A100AC2F0A000100000001 /* UserProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileStore.swift; sourceTree = "<group>"; };
 		B1A100AD2F0A000100000001 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		B1A100B02F0A000100000001 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		B1A100B12F0A000100000001 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
+		B1A100D02F0A000100000001 /* QPTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPTheme.swift; sourceTree = "<group>"; };
+		B1A100D12F0A000100000001 /* LogoBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoBadge.swift; sourceTree = "<group>"; };
+		B1A100D22F0A000100000001 /* PosterPrefetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterPrefetcher.swift; sourceTree = "<group>"; };
 		B1A100AE2F0A000100000001 /* PosterDiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterDiskCache.swift; sourceTree = "<group>"; };
 		B1A100AF2F0A000100000001 /* PosterThumbnails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterThumbnails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -153,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				B10B332F2ED933600000B0F6 /* QPTests.swift */,
+		B1A100C02F0A000100000001 /* SnapshotTests.swift */,
 			);
 			path = QPTests;
 			sourceTree = "<group>";
@@ -198,6 +210,11 @@
 				B1A100A52F0A000100000001 /* Array+Unique.swift */,
 				B1A100AE2F0A000100000001 /* PosterDiskCache.swift */,
 				B1A100AF2F0A000100000001 /* PosterThumbnails.swift */,
+				B1A100B02F0A000100000001 /* AnalyticsService.swift */,
+				B1A100B12F0A000100000001 /* AppLogger.swift */,
+				B1A100D02F0A000100000001 /* QPTheme.swift */,
+				B1A100D12F0A000100000001 /* LogoBadge.swift */,
+				B1A100D22F0A000100000001 /* PosterPrefetcher.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -399,6 +416,11 @@
 				B1A102AD2F0A000100000001 /* LoginView.swift in Sources */,
 				B1A102AE2F0A000100000001 /* PosterDiskCache.swift in Sources */,
 				B1A102AF2F0A000100000001 /* PosterThumbnails.swift in Sources */,
+				B1A102B02F0A000100000001 /* AnalyticsService.swift in Sources */,
+				B1A102B12F0A000100000001 /* AppLogger.swift in Sources */,
+				B1A102D02F0A000100000001 /* QPTheme.swift in Sources */,
+				B1A102D12F0A000100000001 /* LogoBadge.swift in Sources */,
+				B1A102D22F0A000100000001 /* PosterPrefetcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +429,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B10B33302ED933600000B0F6 /* QPTests.swift in Sources */,
+				B1A102C02F0A000100000001 /* SnapshotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

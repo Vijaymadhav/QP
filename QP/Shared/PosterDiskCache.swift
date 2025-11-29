@@ -1,18 +1,23 @@
 import Foundation
 import UIKit
+import os
 
 final class PosterDiskCache {
     static let shared = PosterDiskCache()
     private let directory: URL
     private let ioQueue = DispatchQueue(label: "poster.disk.cache")
     private let fileManager = FileManager.default
-    private let maxEntries = 500
+    private let maxEntries = 1200
     
     private init() {
         let base = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first ?? URL(fileURLWithPath: NSTemporaryDirectory())
         directory = base.appendingPathComponent("PosterCache", isDirectory: true)
         if !fileManager.fileExists(atPath: directory.path) {
-            try? fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+            do {
+                try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+            } catch {
+                AppLogger.cache.error("Failed to create cache directory: \(error.localizedDescription, privacy: .public)")
+            }
         }
     }
     
@@ -26,9 +31,15 @@ final class PosterDiskCache {
     
     func image(for key: String) -> UIImage? {
         let url = fileURL(for: key)
-        guard let data = try? Data(contentsOf: url) else { return nil }
-        return UIImage(data: data)
+        do {
+            let data = try Data(contentsOf: url)
+            return UIImage(data: data)
+        } catch {
+            AppLogger.cache.error("Failed reading cache for \(key, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            return nil
+        }
     }
+
     
     func hasImage(for key: String) -> Bool {
         fileManager.fileExists(atPath: fileURL(for: key).path)
@@ -43,7 +54,11 @@ final class PosterDiskCache {
     
     private func write(_ data: Data, for key: String) {
         let url = fileURL(for: key)
-        try? data.write(to: url, options: .atomic)
+        do {
+            try data.write(to: url, options: .atomic)
+        } catch {
+            AppLogger.cache.error("Failed writing cache for \(key, privacy: .public): \(error.localizedDescription, privacy: .public)")
+        }
     }
     
     private func pruneIfNeeded() {
@@ -55,7 +70,11 @@ final class PosterDiskCache {
             return date0 < date1
         }
         for url in sorted.dropLast(maxEntries) {
-            try? fileManager.removeItem(at: url)
+            do {
+                try fileManager.removeItem(at: url)
+            } catch {
+                AppLogger.cache.error("Failed pruning cache file: \(error.localizedDescription, privacy: .public)")
+            }
         }
     }
     
