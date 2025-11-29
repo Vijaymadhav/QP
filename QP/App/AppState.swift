@@ -1,13 +1,71 @@
 import SwiftUI
 
 final class AppState: ObservableObject {
-    @Published var isOnboarded: Bool = false
-    @Published var userProfile = UserProfile()
-    @Published var watchlist: [Movie] = []
-    @Published var likedMovies: [Movie] = []
+    @Published private(set) var authSession: AuthSession?
+    @Published var isOnboarded: Bool = false {
+        didSet { persistUserState() }
+    }
+    @Published var userProfile = UserProfile() {
+        didSet { persistUserState() }
+    }
+    @Published var watchlist: [Movie] = [] {
+        didSet { persistUserState() }
+    }
+    @Published var likedMovies: [Movie] = [] {
+        didSet { persistUserState() }
+    }
     
     let vectorStore: any MovieVectorStore = MovieVectorStoreFactory.make()
+    private var isRestoringState = false
+    
+    init() {
+        PosterDiskCache.shared.bootstrapBundledThumbnails()
+        self.authSession = AuthStore.shared.currentSession
+        restoreUserState()
+    }
+    
+    func login(name: String, email: String) {
+        let session = AuthStore.shared.login(name: name, email: email)
+        authSession = session
+        restoreUserState()
+    }
+    
+    func completeOnboarding() {
+        isOnboarded = true
+    }
+    
+    private func restoreUserState() {
+        guard let session = authSession,
+              let stored = UserProfileStore.shared.load(for: session.id) else {
+            isRestoringState = true
+            userProfile = UserProfile()
+            watchlist = []
+            likedMovies = []
+            isOnboarded = false
+            isRestoringState = false
+            return
+        }
+        
+        isRestoringState = true
+        userProfile = stored.profile
+        watchlist = stored.watchlist
+        likedMovies = stored.likedMovies
+        isOnboarded = stored.onboardingComplete
+        isRestoringState = false
+    }
+    
+    private func persistUserState() {
+        guard !isRestoringState, let session = authSession else { return }
+        let stored = StoredUserData(
+            profile: userProfile,
+            onboardingComplete: isOnboarded,
+            watchlist: watchlist,
+            likedMovies: likedMovies
+        )
+        UserProfileStore.shared.save(stored, for: session.id)
+    }
 }
+
 
 enum Gender: String, CaseIterable, Identifiable, Codable {
     case male = "Male"
@@ -44,6 +102,10 @@ struct Movie: Identifiable, Codable, Equatable {
     var fullPosterURL: URL? {
         guard let posterPath else { return nil }
         return URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)")
+    }
+
+    var posterCacheKey: String {
+        posterPath ?? "demo-\(id)"
     }
 }
 

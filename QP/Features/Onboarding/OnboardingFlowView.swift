@@ -304,7 +304,7 @@ struct FavoritesStep: View {
             Spacer()
             
             Button {
-                appState.isOnboarded = true
+                appState.completeOnboarding()
             } label: {
                 Text("Finish")
                     .frame(maxWidth: .infinity)

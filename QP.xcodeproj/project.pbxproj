@@ -26,6 +26,11 @@
 		B1A102A82F0A000100000001 /* SwipeDeckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A82F0A000100000001 /* SwipeDeckView.swift */; };
 		B1A102A92F0A000100000001 /* MoviesLikeXView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100A92F0A000100000001 /* MoviesLikeXView.swift */; };
 		B1A102AA2F0A000100000001 /* WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AA2F0A000100000001 /* WatchlistView.swift */; };
+		B1A102AB2F0A000100000001 /* AuthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AB2F0A000100000001 /* AuthStore.swift */; };
+		B1A102AC2F0A000100000001 /* UserProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AC2F0A000100000001 /* UserProfileStore.swift */; };
+		B1A102AD2F0A000100000001 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AD2F0A000100000001 /* LoginView.swift */; };
+		B1A102AE2F0A000100000001 /* PosterDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AE2F0A000100000001 /* PosterDiskCache.swift */; };
+		B1A102AF2F0A000100000001 /* PosterThumbnails.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A100AF2F0A000100000001 /* PosterThumbnails.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +73,11 @@
 		B1A100A82F0A000100000001 /* SwipeDeckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDeckView.swift; sourceTree = "<group>"; };
 		B1A100A92F0A000100000001 /* MoviesLikeXView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesLikeXView.swift; sourceTree = "<group>"; };
 		B1A100AA2F0A000100000001 /* WatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistView.swift; sourceTree = "<group>"; };
+		B1A100AB2F0A000100000001 /* AuthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStore.swift; sourceTree = "<group>"; };
+		B1A100AC2F0A000100000001 /* UserProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileStore.swift; sourceTree = "<group>"; };
+		B1A100AD2F0A000100000001 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		B1A100AE2F0A000100000001 /* PosterDiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterDiskCache.swift; sourceTree = "<group>"; };
+		B1A100AF2F0A000100000001 /* PosterThumbnails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterThumbnails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +174,7 @@
 				B1A101062F0A000100000001 /* Discover */,
 				B1A101072F0A000100000001 /* MoviesLikeX */,
 				B1A101082F0A000100000001 /* Watchlist */,
+				B1A101092F0A000100000001 /* Auth */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -174,6 +185,8 @@
 				B1A100A12F0A000100000001 /* AppState.swift */,
 				B1A100A22F0A000100000001 /* TMDBClient.swift */,
 				B1A100A32F0A000100000001 /* MovieVectorStore.swift */,
+				B1A100AB2F0A000100000001 /* AuthStore.swift */,
+				B1A100AC2F0A000100000001 /* UserProfileStore.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -183,6 +196,8 @@
 			children = (
 				B1A100A42F0A000100000001 /* ImageCaching.swift */,
 				B1A100A52F0A000100000001 /* Array+Unique.swift */,
+				B1A100AE2F0A000100000001 /* PosterDiskCache.swift */,
+				B1A100AF2F0A000100000001 /* PosterThumbnails.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -225,6 +240,14 @@
 				B1A100AA2F0A000100000001 /* WatchlistView.swift */,
 			);
 			path = Watchlist;
+			sourceTree = "<group>";
+		};
+		B1A101092F0A000100000001 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				B1A100AD2F0A000100000001 /* LoginView.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -371,6 +394,11 @@
 				B1A102A82F0A000100000001 /* SwipeDeckView.swift in Sources */,
 				B1A102A92F0A000100000001 /* MoviesLikeXView.swift in Sources */,
 				B1A102AA2F0A000100000001 /* WatchlistView.swift in Sources */,
+				B1A102AB2F0A000100000001 /* AuthStore.swift in Sources */,
+				B1A102AC2F0A000100000001 /* UserProfileStore.swift in Sources */,
+				B1A102AD2F0A000100000001 /* LoginView.swift in Sources */,
+				B1A102AE2F0A000100000001 /* PosterDiskCache.swift in Sources */,
+				B1A102AF2F0A000100000001 /* PosterThumbnails.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

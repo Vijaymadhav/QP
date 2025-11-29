@@ -105,7 +105,7 @@ struct SwipeCardView: View {
                 .overlay(
                     VStack(alignment: .leading, spacing: 12) {
                         if let url = movie.fullPosterURL {
-                            CachedAsyncImage(url: url) { phase in
+                            CachedAsyncImage(url: url, cacheKey: movie.posterCacheKey) { phase in
                                 switch phase {
                                 case .success(let image):
                                     image

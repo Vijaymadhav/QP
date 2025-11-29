@@ -34,17 +34,31 @@ final class ImageLoader: ObservableObject {
     @Published private(set) var phase: CachedImagePhase = .empty
     private let url: URL?
     private let cache: ImageCache
+    private let cacheKey: String?
+    private let diskCache: PosterDiskCache
     private var loadTask: Task<Void, Never>?
     
-    init(url: URL?, cache: ImageCache = TemporaryImageCache.shared) {
+    init(
+        url: URL?,
+        cache: ImageCache = TemporaryImageCache.shared,
+        cacheKey: String? = nil,
+        diskCache: PosterDiskCache = .shared
+    ) {
         self.url = url
         self.cache = cache
+        self.cacheKey = cacheKey
+        self.diskCache = diskCache
     }
     
     func load() {
         guard loadTask == nil else { return }
         guard let url else {
             phase = .failure(ImageLoaderError.invalidURL)
+            return
+        }
+        if let key = cacheKey, let diskImage = diskCache.image(for: key) {
+            cache[url] = diskImage
+            phase = .success(Image(uiImage: diskImage))
             return
         }
         if let cached = cache[url] {
@@ -62,6 +76,9 @@ final class ImageLoader: ObservableObject {
                 }
                 await MainActor.run {
                     self.cache[url] = image
+                    if let key = self.cacheKey {
+                        self.diskCache.store(data, for: key)
+                    }
                     self.phase = .success(Image(uiImage: image))
                 }
             } catch {
@@ -88,8 +105,14 @@ struct CachedAsyncImage<Content: View>: View {
     @StateObject private var loader: ImageLoader
     private let content: (CachedImagePhase) -> Content
     
-    init(url: URL?, cache: ImageCache = TemporaryImageCache.shared, @ViewBuilder content: @escaping (CachedImagePhase) -> Content) {
-        _loader = StateObject(wrappedValue: ImageLoader(url: url, cache: cache))
+    init(
+        url: URL?,
+        cacheKey: String? = nil,
+        cache: ImageCache = TemporaryImageCache.shared,
+        diskCache: PosterDiskCache = .shared,
+        @ViewBuilder content: @escaping (CachedImagePhase) -> Content
+    ) {
+        _loader = StateObject(wrappedValue: ImageLoader(url: url, cache: cache, cacheKey: cacheKey, diskCache: diskCache))
         self.content = content
     }
     

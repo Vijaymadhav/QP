@@ -5,7 +5,9 @@ struct RootView: View {
     
     var body: some View {
         Group {
-            if appState.isOnboarded {
+            if appState.authSession == nil {
+                LoginView()
+            } else if appState.isOnboarded {
                 MainTabView()
             } else {
                 OnboardingFlowView()
